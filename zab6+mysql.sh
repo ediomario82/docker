@@ -20,7 +20,7 @@ docker run --name mysql-server -t \
 docker run --name zabbix-java-gateway -t \
              --network=zabbix-net \
              --restart unless-stopped \
-             -d zabbix/zabbix-java-gateway:alpne-6.0-latest
+             -d zabbix/zabbix-java-gateway:alpine-6.0-latest
 
 docker run --name zabbix-server-mysql -t \
              -e DB_SERVER_HOST="mysql-server" \
