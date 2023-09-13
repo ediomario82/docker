@@ -1,7 +1,6 @@
 #!/bin/bash
 
 cd
-
 docker volume create uptime-kuma
 
 docker run -d \
