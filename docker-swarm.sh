@@ -17,4 +17,46 @@ docker node rm (idnode)
 #atualizar servico no cluster
 docker service update --force (nomedastack)
 
+###########################
+####docker-compose.yml#####
+###########################
+
+version: "3.8"
+
+services:
+  site:
+    image: developer10/site
+    deploy:
+      replicas: 5
+      placement:
+        constraints: [node.role==worker]
+    ports:
+      - 3000:80
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    deploy:
+      placement:
+        constraints: [node.role == manager] 
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+    - "8888:8080"
+    volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]        
+
+volumes:
+  postgres_data:
+
 
