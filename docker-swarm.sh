@@ -8,7 +8,7 @@ docker swarm init --advertise-addr 192.168.XX.XX
 docker node ls
 
 #comando para promover um node para manager
-docker node promote (nodename)
+docker node promote (hostname)
 #Subir a aplicação no cluster swarm
 docker stack deploy -c docker-compose.yml (nomedastack)
 docker swarm join --token
