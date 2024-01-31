@@ -2,7 +2,7 @@
 
 ## CRIANDO CLUSTER DOCKER COM SWARM ###
 #comando para criar o cluster swarm
-docker swarm init --advertise-addr
+docker swarm init --advertise-addr 192.168.XX.XX
 
 #Comando para verificar os nodes do cluster
 docker node ls
