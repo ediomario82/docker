@@ -42,17 +42,16 @@ docker service ls
 docker stats
 ```
 
+- Atualizar servico no cluster
+```sh
+docker service update --force (nomedastack)
+```
+ 
   - Entrar em um container:
-
 ```sh
 # primeiro obtenha o id do container, pode ser via 'docker stats'
 # com o id em mãos substitua '{id}' pelo id obtido
 docker exec -it {id} bash
 ```
 
-  - Como o docker está rodando dentro do WSL, nós precisamos obter o ip do WSL para pode nos conectar a aplicação. Para isso pode ser preciso realizar esse passo a passo
 
-```sh
-apt-get install ifconfig -y && ifconfig
-# localize por 'eth0' ou semelhante, e então veja o ip em 'inet'
-```
