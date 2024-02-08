@@ -1,5 +1,15 @@
-# Docker Swarm
+## Instalar docker no linux
 
+ ```sh
+ curl -fsSL https://get.docker.com -o get-docker.sh
+```
+ ```sh
+ sudo sh get-docker.sh
+```
+ ```sh
+ sudo docker run hello-world
+```
+## Docker Swarm
 - Iniciar o Swarm na Aplicação Docker
   - Comando para criar o cluster swarm
  ```sh
