@@ -6,7 +6,6 @@ services:
     restart: always
     volumes:
       - mongo_data:/data/db
-
   elasticsearch:
     container_name: elasticsearch
     restart: always
@@ -16,7 +15,6 @@ services:
       - transport.host=localhost
       - network.host=0.0.0.0
       - "ES_JAVA_OPTS=-Dlog4j2.formatMsgNoLookups=true -Xms512m -Xmx512m"
-
   graylog:
     container_name: graylog
     image: graylog/graylog:4.3
