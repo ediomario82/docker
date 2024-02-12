@@ -52,7 +52,7 @@ docker run --name grafana \
            -e "GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app" \
            -e "GF_PLUGINS_ALLOW_LOADING_USIGNED_PLUGINS=alexanderzobnin-zabbix-datasource" \
            --network=zabbix-net \
-	         --restart unless-stopped \
+	   --restart unless-stopped \
            -p 3000:3000 \
            -v grafana-storage:/var/lib/grafana \
            -d grafana/grafana-enterprise
