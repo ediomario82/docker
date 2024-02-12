@@ -42,3 +42,17 @@ docker run --name zabbix-web-nginx -t \
              -p 80:8080 \
              --restart unless-stopped \
              -d zabbix/zabbix-web-nginx-mysql:alpine-6.0-latest
+
+# Criar container Grafana
+docker volume create grafana-storage
+
+docker run --name grafana \
+           -e "GF_SERVER_ROOT_URL=http://grafana.local" \
+           -e "GF_SECURITY_ADMIN_PASSWORD=passwd" \
+           -e "GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app" \
+           -e "GF_PLUGINS_ALLOW_LOADING_USIGNED_PLUGINS=alexanderzobnin-zabbix-datasource" \
+           --network=zabbix-net \
+	         --restart unless-stopped \
+           -p 3000:3000 \
+           -v grafana-storage:/var/lib/grafana \
+           -d grafana/grafana-enterprise
