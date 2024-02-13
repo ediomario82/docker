@@ -38,6 +38,7 @@ docker run --name zabbix-web-nginx -t \
              -e MYSQL_USER="zabbix" \
              -e MYSQL_PASSWORD="zabbix_pwd" \
              -e MYSQL_ROOT_PASSWORD="root_pwd" \
+	     -e PHP_TZ=America/Sao_Paulo \
              --network=zabbix-net \
              -p 80:8080 \
              --restart unless-stopped \
