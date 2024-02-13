@@ -14,15 +14,6 @@ docker run --name mysql-server -t \
              -d mysql:8.0.36 \
              --character-set-server=utf8mb4 --collation-server=utf8mb4_bin \
 
-docker run --name zabbix-server-mysql -t \
-             -e DB_SERVER_HOST="mysql-server" \
-             -e MYSQL_DATABASE="zabbix" \
-             -e MYSQL_USER="zabbix" \
-             -e MYSQL_PASSWORD="zabbix_pwd" \
-             -e MYSQL_ROOT_PASSWORD="root_pwd" \
-             --network=zabbix-net \
-             --restart unless-stopped \
-             -d zabbix/zabbix-server-mysql:alpine-6.0-latest
 docker run --name zabbix-java-gateway -t \
              --network=zabbix-net \
              --restart unless-stopped \
@@ -40,6 +31,20 @@ docker run --name zabbix-server-mysql -t \
              --restart unless-stopped \
              -d zabbix/zabbix-server-mysql:alpine-6.0-latest
 
+docker run --name zabbix-web-nginx-mysql -t \
+             -e ZBX_SERVER_HOST="zabbix-server-mysql" \
+             -e DB_SERVER_HOST="mysql-server" \
+             -e MYSQL_DATABASE="zabbix" \
+             -e MYSQL_USER="zabbix" \
+             -e MYSQL_PASSWORD="zabbix_pwd" \
+             -e MYSQL_ROOT_PASSWORD="root_pwd" \
+             -e PHP_TZ=America/Sao_Paulo \
+             --network=zabbix-net \
+             -p 80:8080 \
+             -p 443:443 \
+             --restart unless-stopped \
+             -d zabbix/zabbix-web-nginx-mysql:alpine-6.0-latest
+
 # Criar container Grafana
 docker volume create grafana-storage
 
@@ -53,4 +58,3 @@ docker run --name grafana \
            -p 3000:3000 \
            -v grafana-storage:/var/lib/grafana \
            -d grafana/grafana-enterprise
-      
