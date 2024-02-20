@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   postgres-server:    # The Postgres Database Service
-    image: postgres:15
+    image: postgres:latest
     restart: always
     environment:   # Username, password and database name variables
       POSTGRES_USER: zabbix
@@ -15,6 +15,7 @@ services:
     image: zabbix/zabbix-server-pgsql:alpine-6.4-latest
     restart: always
     environment:   # The Postgres database value variable
+      DB_SERVER_HOST: postgres-server
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix_pwd
       POSTGRES_DB: zabbix_db
@@ -31,18 +32,21 @@ services:
     image: zabbix/zabbix-web-nginx-pgsql:alpine-6.4-latest
     restart: always
     environment:  # Postgre database variables
+      DB_SERVER_HOST: postgres-server
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix_pwd
       POSTGRES_DB: zabbix_db
       ZBX_SERVER_HOST: zabbix-server  # Zabbix related and Php variables
-      ZBX_POSTMAXSIZE: 128M
+      ZBX_POSTMAXSIZE: 64M
       PHP_TZ: "America/Sao_Paulo"
       ZBX_MAXEXECUTIONTIME: 500
     depends_on:
       - postgres-server
       - zabbix-server
     ports:    # Port where Zabbix UI is available
-      - 8080:80
+      - 8080:8080
+      - 443:8443
+
   zabbix-agent:   # Zabbix agent service that tracks usage and send to zabbix server
     image: zabbix/zabbix-agent:latest
     privileged: true   #access mode for allowing resource access
