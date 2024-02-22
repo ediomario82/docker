@@ -9,6 +9,8 @@ services:
     ports:
       - 3000:3000
     deploy:
+      placement:
+        constraints: [node.role == manager]
       replicas: 2
       resources:
         limits:
