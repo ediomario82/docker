@@ -1,4 +1,4 @@
-  GNU nano 5.6.1                                            kuma-swarm.yml                                                         version: '3.8'
+version: '3.8'
 services:
   kuma:
     image: louislam/uptime-kuma:latest
