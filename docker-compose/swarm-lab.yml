@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana-enterprise
+    deploy:
+      replicas: 3
+      placement:
+        constraints: [node.role==worker]
+    ports:
+      - "3001:3000"
+    networks:
+      - lab
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - visualizer
+  kuma:
+    image: louislam/uptime-kuma:latest
+    deploy:
+      replicas: 3
+      placement:
+        constraints: [node.role==worker]
+    environment:
+      - TZ=America/Sao_Paulo
+    ports:
+      - "3002:3001"
+    networks:
+      - lab
+    volumes:
+      - kuma-storage:/app/data
+    depends_on:
+      - visualizer
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8888:8080"
+    networks:
+      - lab
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      replicas: 2
+      placement:
+        constraints: [node.role == manager]
+        
+networks:
+  lab:
+    driver: overlay
+volumes:
+  grafana-storage:
+  kuma-storage:
+        
