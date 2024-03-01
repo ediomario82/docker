@@ -4,9 +4,9 @@ services:
   grafana:
     image: grafana/grafana-enterprise
     deploy:
-      replicas: 3
+      replicas: 4
       placement:
-        constraints: [node.role==worker]
+        constraints: [node.role==manager]
     ports:
       - "3001:3000"
     networks:
@@ -18,9 +18,9 @@ services:
   kuma:
     image: louislam/uptime-kuma:latest
     deploy:
-      replicas: 3
+      replicas: 4
       placement:
-        constraints: [node.role==worker]
+        constraints: [node.role==manager]
     environment:
       - TZ=America/Sao_Paulo
     ports:
@@ -42,8 +42,7 @@ services:
     deploy:
       replicas: 2
       placement:
-        constraints: [node.role == manager]
-        
+        constraints: [node.role == worker]
 networks:
   lab:
     driver: overlay
