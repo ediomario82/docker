@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  bind9:
+    container_name: dns-1
+    image: ubuntu/bind9:latest
+    environment:
+      - BIND9_USER=root
+      - TZ=America/Sao_Paulo
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    deploy:
+     resources:
+        limits:
+          cpus: '0.25'
+          memory: 1536M
+    volumes:
+      - /mnt/bind/config:/etc/bind
+      - /mnt/bind/cache:/var/cache/bind
+      - /mnt/bind/records:/var/lib/bind
+    restart: always
