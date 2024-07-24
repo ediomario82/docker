@@ -5,7 +5,7 @@ version: '3.6'
 services:
   checkmk:
     container_name: checkmk
-    image: checkmk/check-mk-raw:2.3.0-latest
+    image: checkmk/check-mk-raw
     tmpfs:
       - /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
     ulimits:
@@ -15,6 +15,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "8080:5000"
+      - "8000:8000"
     restart: always
     networks:
       checkmk_network:
