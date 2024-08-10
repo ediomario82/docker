@@ -6,6 +6,9 @@ cd
 docker volume create portainer_data
 
 docker run -d \
+	-m 256m \
+        --memory-swap 1G \
+        --cpus 0.25 \
 	-p 8000:8000 \
 	-p 7900:9000 \
 	--name portainer \
