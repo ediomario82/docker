@@ -33,6 +33,11 @@ docker run --name zabbix-server-mariadb -t \
 
 docker run --name zabbix-web-nginx -t \
              -e ZBX_SERVER_HOST="zabbix-server-mariadb" \
+	     -e ZBX_CACHESIZE="256M" \
+             -e ZBX_HISTORYCACHESIZE="128M" \
+	     -e ZBX_HISTORYINDEXCACHESIZE="64M" \
+             -e ZBX_TRENDCACHESIZE="64M" \
+	     -e ZBX_VALUECACHESIZE="128M" \
              -e DB_SERVER_HOST="mariaDB-server" \
              -e MYSQL_DATABASE="zabbix" \
              -e MYSQL_USER="zabbix" \
