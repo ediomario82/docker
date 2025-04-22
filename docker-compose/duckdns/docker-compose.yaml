@@ -9,6 +9,7 @@ services:
       - TZ=America/Sao_Paulo #optional
       - SUBDOMAINS=bridge
       - TOKEN=token
+      - UPDATE_IP=ipv4 #optional
       - LOG_FILE=false #optional
     volumes:
       - /path/to/appdata/config:/config #optional
