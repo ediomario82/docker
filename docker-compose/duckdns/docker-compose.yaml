@@ -7,8 +7,8 @@ services:
       #- PUID=1000 #optional
       #- PGID=1000 #optional
       - TZ=America/Sao_Paulo #optional
-      - SUBDOMAINS=armbian-lab,bixaotv,edysilva,lab-docker
-      - TOKEN=336c5730-6e26-4c1f-9c80-ca7f8876ccee
+      - SUBDOMAINS=armbian,silva,lab-docker
+      - TOKEN=5730-6e26-4c1f-9c80-ca7f8876
       - LOG_FILE=false #optional
     volumes:
       - /mnt/duckdns:/config #optional
