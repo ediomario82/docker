@@ -59,6 +59,7 @@ services:
       MYSQL_PASSWORD: zabbix_pwd
       MYSQL_ROOT_PASSWORD: zabbix
       PHP_TZ: America/Sao_Paulo
+      ZBX_DB_ENCRYPTION: true
     depends_on:
       - mariadb
 
