@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Criar rede zabbix-net
 docker network create zabbix-net --subnet 172.20.0.0/16 --ip-range 172.20.240.0/20
 
 docker run --name mariaDB-server -t \
@@ -11,13 +10,13 @@ docker run --name mariaDB-server -t \
              --network=zabbix-net \
              -v mariadb:/var/lib/mysql \
              --restart unless-stopped \
-             -d mariadb:10.6.15-focal \
-             --character-set-server=utf8mb4 --collation-server=utf8mb4_bin \
+             -d mariadb:11.8 \
+             --skip-ssl --character-set-server=utf8mb4 --collation-server=utf8mb4_bin \
 
 docker run --name zabbix-java-gateway -t \
              --network=zabbix-net \
              --restart unless-stopped \
-             -d zabbix/zabbix-java-gateway:alpine-latest
+             -d zabbix/zabbix-java-gateway:alpine-7.4-latest
 
 docker run --name zabbix-server-mariadb -t \
              -e DB_SERVER_HOST="mariaDB-server" \
@@ -25,16 +24,12 @@ docker run --name zabbix-server-mariadb -t \
              -e MYSQL_USER="zabbix" \
              -e MYSQL_PASSWORD="zabbix_pwd" \
              -e MYSQL_ROOT_PASSWORD="root_pwd" \
-	     -e ZBX_CACHESIZE="256M" \
-             -e ZBX_HISTORYCACHESIZE="128M" \
-	     -e ZBX_HISTORYINDEXCACHESIZE="64M" \
-             -e ZBX_TRENDCACHESIZE="64M" \
-	     -e ZBX_VALUECACHESIZE="128M" \
              -e ZBX_JAVAGATEWAY="zabbix-java-gateway" \
+	     -e DB_TLS_CONNECT=disabled \
              --network=zabbix-net \
              -p 10051:10051 \
              --restart unless-stopped \
-              -d zabbix/zabbix-server-mysql:alpine-latest
+              -d zabbix/zabbix-server-mysql:alpine-7.4-latest
 
 docker run --name zabbix-web-nginx -t \
              -e ZBX_SERVER_HOST="zabbix-server-mariadb" \
@@ -45,10 +40,10 @@ docker run --name zabbix-web-nginx -t \
              -e MYSQL_ROOT_PASSWORD="root_pwd" \
 	     -e PHP_TZ=America/Sao_Paulo \
              --network=zabbix-net \
-	     -p 443:443 \
-             -p 80:8080 \
+	     -p 8443:443 \
+             -p 8080:8080 \
              --restart unless-stopped \
-             -d zabbix/zabbix-web-nginx-mysql:alpine-latest
+             -d zabbix/zabbix-web-nginx-mysql:alpine-7.4-latest
 
 # Criar container Grafana
 docker volume create grafana-storage
@@ -63,3 +58,6 @@ docker run --name grafana \
            -p 3000:3000 \
            -v grafana-storage:/var/lib/grafana \
            -d grafana/grafana-enterprise
+
+echo "Acesse: http://localhost:8080"
+echo "Usuário: Admin / Senha: zabbix"
