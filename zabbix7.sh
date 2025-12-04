@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Criar rede zabbix-net
 docker network create zabbix-net --subnet 172.20.0.0/16 --ip-range 172.20.240.0/20
 
 docker run --name mariaDB-server -t \
@@ -11,7 +12,7 @@ docker run --name mariaDB-server -t \
              -v mariadb:/var/lib/mysql \
              --restart unless-stopped \
              -d mariadb:11.8 \
-             --skip-ssl --character-set-server=utf8mb4 --collation-server=utf8mb4_bin \
+             --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-authentication-plugin=mysql_native_password\
 
 docker run --name zabbix-java-gateway -t \
              --network=zabbix-net \
