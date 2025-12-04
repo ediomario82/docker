@@ -57,7 +57,7 @@ services:
       - MYSQL_USER=zabbix
       - MYSQL_PASSWORD=zabbix_pwd
       - PHP_TZ=America/Sao_Paulo
-      - ZBX_TLSKEY=false
+      - ZBX_DB_ENCRYPTION=true
     depends_on:
       - mysql
    
