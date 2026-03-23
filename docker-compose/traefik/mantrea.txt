@@ -1,0 +1,19 @@
+#Quick Start
+#Installation
+
+#Using the install script:
+curl -fsSL https://raw.githubusercontent.com/mizuchilabs/mantrae/main/install.sh | sh
+
+Usage
+
+# Start the server
+mantrae
+
+# Display version
+mantrae --version
+
+# Reset admin password
+mantrae reset --password newpassword
+
+# Reset password for a specific user
+mantrae reset --user username --password newpassword
