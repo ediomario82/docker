@@ -1,0 +1,104 @@
+services:
+  # 🗄️ Banco de Dados do n8n
+  postgres:
+    image: postgres:16-alpine
+    container_name: n8n_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n_user
+      POSTGRES_PASSWORD: n8n_secure_pass
+      POSTGRES_DB: n8n_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - automacao_net
+
+  # 🤖 n8n
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=n8n_user
+      - DB_POSTGRESDB_PASSWORD=n8n_secure_pass
+      - DB_POSTGRESDB_DATABASE=n8n_db
+      - N8N_SECURE_COOKIE=false
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+    networks:
+      - automacao_net
+
+  # 📱 Banco da Evolution API
+  mongo:
+    image: mongo:7
+    container_name: evolution_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: evo_user
+      MONGO_INITDB_ROOT_PASSWORD: evo_secure_pass
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - automacao_net
+
+  # ⚡ Cache da Evolution API
+  redis:
+    image: redis:7-alpine
+    container_name: evolution_redis
+    restart: unless-stopped
+    command: redis-server --requirepass redis_secure_pass
+    volumes:
+      - redis_data:/data
+    networks:
+      - automacao_net
+
+  # 🔌 Evolution API v2
+  evolution-api:
+    image: atendai/evolution-api:latest
+    container_name: evolution_api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - AUTHENTICATION_TYPE=apikey
+      - AUTHENTICATION_API_KEY=MINHA_CHAVE_API_SECRETA
+      - DATABASE_PROVIDER=mongodb
+      - MONGO_URL=mongodb://evo_user:evo_secure_pass@mongo:27017
+      - MONGO_DB_NAME=evolution_db
+      - REDIS_ENABLED=true
+      - REDIS_URI=redis://:redis_secure_pass@redis:6379
+      - REDIS_PREFIX_KEY=evolution
+      - SERVER_URL=http://localhost:8080
+      - WEBHOOK_GLOBAL_URL=http://n8n:5678/webhook/evolution
+      - LOG_LEVEL=error
+    volumes:
+      - evolution_instances:/evolution/instances
+      - evolution_store:/evolution/store
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - automacao_net
+
+volumes:
+  postgres_data:
+  n8n_data:
+  mongo_data:
+  redis_data:
+  evolution_instances:
+  evolution_store:
+
+networks:
+  automacao_net:
+    driver: bridge
