@@ -2,21 +2,33 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
+    ports:
+      - "11434:11434" # Exposto caso queira acessar a API externamente
     volumes:
-      - ollama:/root/.ollama
+      - ollama_data:/root/.ollama
     restart: unless-stopped
+    # 🔽 Descomente as linhas abaixo se tiver GPU NVIDIA
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     ports:
-      - "8000:8080"
+      - "3000:8080" # Acesse em http://localhost:3000
+    volumes:
+      - open_webui_data:/app/backend/data
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
-    volumes:
-      - open-webui:/app/backend/data
+    depends_on:
+      - ollama
     restart: unless-stopped
 
 volumes:
-  ollama:
-  open-webui:
+  ollama_data:
+  open_webui_data:
