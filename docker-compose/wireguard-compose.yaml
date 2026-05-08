@@ -1,0 +1,89 @@
+version: '3.7'
+
+services:
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE #optional
+    #network_mode: host
+    networks:
+     - wireguard
+    ports:
+     - "51820:51820/udp"
+    environment:
+      - PUID=800
+      - PGID=800
+      - TZ=America/Sao_Paulo
+      #- SERVERURL=<seudominio-server>
+      #- SERVERPORT=51820 #optional
+      #- PEERS=10 #optional
+      #- PEERDNS=8.8.8.8,1.1.1.1
+      #- INTERNAL_SUBNET=10.13.13.0 #optional
+      #- ALLOWEDIPS=0.0.0.0/0 #optional
+      #- PERSISTENTKEEPALIVE_PEERS= all
+      #- LOG_CONFS=true #optional
+    volumes:
+      - /root/docker/wireguard/config:/config
+      - /lib/modules:/lib/modules #optional
+
+  wireguard-ui:
+    image: ngoduykhanh/wireguard-ui:latest
+    container_name: wireguard-ui
+    restart: unless-stopped
+    depends_on:
+      - wireguard
+    cap_add:
+      - NET_ADMIN
+    #network_mode: host
+    networks:
+      - outside
+    #ports:
+    #  - "5000:5000"
+    environment:
+      - SESSION_MAX_DURATION=1
+      - WGUI_ENDPOINT_ADDRESS=<seudominio-server>
+      #- EMAIL_FROM_ADDRESS=<seuemail>
+      #- EMAIL_FROM_NAME=WireGuard UI
+      #- SMTP_HOSTNAME=smtp.<seuservidor>.
+      #- SMTP_PORT=587
+      #- SMTP_USERNAME=<email>
+      #- SMTP_PASSWORD=<email-password>
+      #- SMTP_AUTH_TYPE=PLAIN
+      #- SMTP_ENCRYPTION=TLS
+      - WGUI_DNS=8.8.8.8,1.1.1.1
+      - WGUI_MTU=1450
+      - WGUI_PERSISTENT_KEEPALIVE=15
+      - WGUI_DEFAULT_CLIENT_USE_SERVER_DNS=true
+      - WGUI_SERVER_INTERFACE_ADDRESSES=10.10.10.0/23
+      - SUBNET_RANGES=SR1:10.10.10.0/24; SR2:10.10.11.0/24
+      - WGUI_DEFAULT_CLIENT_ALLOWED_IPS=0.0.0.0/0
+      - SESSION_SECRET=kAxWpB8gJcCawQnq
+      - WGUI_USERNAME=<user>
+      - WGUI_PASSWORD=<password>
+      - WGUI_MANAGE_START=true
+      - WGUI_MANAGE_RESTART=true
+      - WGUI_CONFIG_FILE_PATH=/etc/wireguard/wg_confs/wg0.conf
+      - WGUI_SERVER_POST_UP_SCRIPT=iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth+ -j MASQUERADE
+      - WGUI_SERVER_POST_DOWN_SCRIPT=iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth+ -j MASQUERADE
+    logging:
+      driver: json-file
+      options:
+        max-size: 30m
+    volumes:
+      - /root/docker/wireguard/db:/app/db
+      - /root/docker/wireguard/config:/etc/wireguard
+
+networks:
+
+  outside:
+    external: true
+    name: outside
+
+  wireguard:
+    name: wireguard
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: wireguard
