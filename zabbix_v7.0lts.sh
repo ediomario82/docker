@@ -12,7 +12,7 @@ docker run --name mariaDB-server -t \
              -v mariadb:/var/lib/mysql \
              --restart unless-stopped \
              -d mariadb:11.8 \
-             --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-authentication-plugin=mysql_native_password\
+             --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-authentication-plugin=mysql_native_password
 
 docker run --name zabbix-java-gateway -t \
              --network=zabbix-net \
