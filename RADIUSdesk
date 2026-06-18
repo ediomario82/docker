@@ -1,0 +1,19 @@
+# Create the Docker containers
+# We include everything to create the RADIUSdesk docker containers with the RADIUSdesk (rdcore) repository.
+# Check out the rdcore git repository.
+
+cd ~
+sudo git clone https://github.com/RADIUSdesk/rdcore.git
+
+# Mount the rdcore top directory to the rdcore/docker/rdcore directory
+cd rdcore/docker
+sudo mkdir rdcore
+sudo mount --bind ../../rdcore ./rdcore
+
+# Run the local_build.sh script.
+./local_build.sh
+
+#Open a browser and go to the IP Address of the host running the docker containers.
+#The default login credentials for a new RADIUSdesk system are:
+Username: root 
+Password: admin
