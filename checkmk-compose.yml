@@ -4,8 +4,8 @@ services:
     container_name: "monitoring"
     restart: always
     environment:
-      - CMK_PASSWORD=mypassword   # Change this to a secure password
-      - TZ=Europe/Berlin          # Adjust to your local timezone
+      - CMK_PASSWORD=passwd   # Change this to a secure password
+      - TZ=America/Sao_Paulo          # Adjust to your local timezone
     volumes:
       - monitoring:/omd/sites
       - /etc/localtime:/etc/localtime:ro
