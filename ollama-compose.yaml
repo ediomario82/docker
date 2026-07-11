@@ -7,17 +7,17 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
-    # 🔽 Descomente as linhas abaixo se tiver GPU NVIDIA
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: all
-    #           capabilities: [gpu]
+    #Descomente as linhas abaixo se tiver GPU NVIDIA
+    deploy:
+       resources:
+         reservations:
+           devices:
+             - driver: nvidia
+               count: all
+               capabilities: [gpu]
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:main
+    image: ghcr.io/open-webui/open-webui:cuda
     container_name: open-webui
     ports:
       - "3000:8080" # Acesse em http://localhost:3000
