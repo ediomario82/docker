@@ -35,4 +35,5 @@ docker run --name php-apache  \
              --restart unless-stopped \
              -p 80:80 \
              -v ./html/www/:/var/www/html \
-             -d php:7.4-apache
+             -d php:8.4-apache
+  #-d php:7.4-apache
