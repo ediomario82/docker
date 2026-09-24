@@ -1,0 +1,15 @@
+services:
+  zima:
+    image: dockurr/zima
+    container_name: zima
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 7070:80
+    volumes:
+      - /mnt/zima:/storage
+    restart: always
+    stop_grace_period: 2m
