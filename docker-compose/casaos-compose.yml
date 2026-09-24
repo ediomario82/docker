@@ -6,7 +6,7 @@ services:
     image: dockurr/casa
     container_name: casa
     ports:
-      - 8080:8080
+      - 7070:8080
     volumes:
       - ./casa:/DATA
       - /var/run/docker.sock:/var/run/docker.sock
