@@ -38,3 +38,5 @@ volumes:
  mysql-data:
  uploads:
  storage-uploads:
+
+ #FONTE: https://github.com/solidnerd/docker-bookstack/tree/master
