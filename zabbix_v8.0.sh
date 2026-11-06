@@ -1,5 +1,5 @@
 # Criar rede zabbix-net
-docker network create zabbix-net --subnet 172.22.0.0/16 --ip-range 172.22.240.0/20
+docker network create zabbix-net --subnet 172.22.240.0/24 --ip-range 172.22.240.0/25
 
 docker run --name mariaDB-server -t \
              -e MYSQL_DATABASE="zabbix" \
